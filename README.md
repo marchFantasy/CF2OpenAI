@@ -1,7 +1,7 @@
 # Cloudflare Workers AI → OpenAI API 适配器
 
 将 [Cloudflare Workers AI](https://developers.cloudflare.com/workers-ai/) 转换为兼容 OpenAI Chat Completion 格式的 API 代理，让你可以在任何支持 OpenAI API 的客户端中直接使用 Cloudflare 的免费 AI 模型。
-
+> 灵感来自于项目（[workersAI-convert-chatCompletions-API](https://github.com/juerson/workersAI-convert-chatCompletions-API)）
 ## ✨ 特性
 
 - 🔄 **完全兼容 OpenAI 格式** — 支持 `/v1/chat/completions` 和 `/v1/models` 端点
