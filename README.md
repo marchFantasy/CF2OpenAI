@@ -1,7 +1,9 @@
 # Cloudflare Workers AI → OpenAI API 适配器
 
 将 [Cloudflare Workers AI](https://developers.cloudflare.com/workers-ai/) 转换为兼容 OpenAI Chat Completion 格式的 API 代理，让你可以在任何支持 OpenAI API 的客户端中直接使用 Cloudflare 的免费 AI 模型。
+
 > 灵感来自于项目（[workersAI-convert-chatCompletions-API](https://github.com/juerson/workersAI-convert-chatCompletions-API)）
+
 ## ✨ 特性
 
 - 🔄 **完全兼容 OpenAI 格式** — 支持 `/v1/chat/completions` 和 `/v1/models` 端点
@@ -41,11 +43,13 @@
 1. 进入 Worker 的 **Settings**（设置）→ **Variables and Secrets**（变量和密钥）
 2. 添加以下变量：
 
-| 变量名 | 类型 | 说明 |
-|--------|------|------|
-| `ACCOUNT_ID` | 文本 | 你的 Cloudflare Account ID |
-| `API_TOKEN` | 密钥 | 你的 Cloudflare API Token |
-| `API_KEY` | 密钥 | 自定义的 API 访问密钥（客户端需要使用此密钥） |
+| 变量名       | 类型 | 说明                                          |
+| ------------ | ---- | --------------------------------------------- |
+| `ACCOUNT_ID` | 文本 | 你的 Cloudflare Account ID                    |
+| `API_TOKEN`  | 密钥 | 你的 Cloudflare API Token                     |
+| `API_KEY`    | 密钥 | 自定义的 API 访问密钥（客户端需要使用此密钥） |
+
+![配置环境变量](doc/20260423-100709.png)
 
 > 如果设置了环境变量，会自动覆盖代码中的硬编码值。
 
@@ -55,6 +59,9 @@
 2. 添加绑定
 3. 选择Workers AI，点击添加绑定
 4. 变量名称填入：AI，点击添加绑定
+
+![选择Workers AI](doc/20260423-100559.png)
+![AI](doc/20260423-100628.png)
 
 ### 步骤五：验证部署
 
@@ -97,11 +104,11 @@ curl https://your-worker.your-subdomain.workers.dev/v1/chat/completions \
 
 在任何支持 OpenAI API 的客户端中，将以下参数替换为你自己的值：
 
-| 配置项 | 值 |
-|--------|------|
+| 配置项       | 值                                                  |
+| ------------ | --------------------------------------------------- |
 | API Base URL | `https://your-worker.your-subdomain.workers.dev/v1` |
-| API Key | 你设置的自定义密钥（如 `sk-xxxx`） |
-| Model | 模型短名称，如 `llama-3.1-8b-instruct` |
+| API Key      | 你设置的自定义密钥（如 `sk-xxxx`）                  |
+| Model        | 模型短名称，如 `llama-3.1-8b-instruct`              |
 
 ### Python (OpenAI SDK)
 
@@ -134,16 +141,16 @@ for chunk in stream:
 ### Node.js (OpenAI SDK)
 
 ```javascript
-import OpenAI from "openai";
+import OpenAI from 'openai';
 
 const openai = new OpenAI({
-  apiKey: "sk-你的自定义密钥",
-  baseURL: "https://your-worker.your-subdomain.workers.dev/v1",
+	apiKey: 'sk-你的自定义密钥',
+	baseURL: 'https://your-worker.your-subdomain.workers.dev/v1',
 });
 
 const completion = await openai.chat.completions.create({
-  model: "llama-3.1-8b-instruct",
-  messages: [{ role: "user", content: "你好" }],
+	model: 'llama-3.1-8b-instruct',
+	messages: [{ role: 'user', content: '你好' }],
 });
 
 console.log(completion.choices[0].message.content);
@@ -153,17 +160,17 @@ console.log(completion.choices[0].message.content);
 
 以下为当前配置的模型短名称列表（可在代码中自行增减）：
 
-| 短名称 | Cloudflare 模型路径 |
-|--------|---------------------|
-| `llama-3.1-8b-instruct` | @cf/meta/llama-3.1-8b-instruct |
-| `llama-3.3-70b-instruct-fp8-fast` | @cf/meta/llama-3.3-70b-instruct-fp8-fast |
-| `llama-4-scout-17b-16e-instruct` | @cf/meta/llama-4-scout-17b-16e-instruct |
-| `deepseek-r1-distill-qwen-32b` | @cf/deepseek-ai/deepseek-r1-distill-qwen-32b |
-| `gemma-7b-it` | @hf/google/gemma-7b-it |
-| `mistral-7b-instruct-v0.2` | @hf/mistral/mistral-7b-instruct-v0.2 |
-| `kimi-k2.5` | @cf/moonshotai/kimi-k2.5 |
-| `kimi-k2.6` | @cf/moonshotai/kimi-k2.6 |
-| ... | 更多模型请查看代码中的 `TEXT_GENERATION_MODELS` |
+| 短名称                            | Cloudflare 模型路径                             |
+| --------------------------------- | ----------------------------------------------- |
+| `llama-3.1-8b-instruct`           | @cf/meta/llama-3.1-8b-instruct                  |
+| `llama-3.3-70b-instruct-fp8-fast` | @cf/meta/llama-3.3-70b-instruct-fp8-fast        |
+| `llama-4-scout-17b-16e-instruct`  | @cf/meta/llama-4-scout-17b-16e-instruct         |
+| `deepseek-r1-distill-qwen-32b`    | @cf/deepseek-ai/deepseek-r1-distill-qwen-32b    |
+| `gemma-7b-it`                     | @hf/google/gemma-7b-it                          |
+| `mistral-7b-instruct-v0.2`        | @hf/mistral/mistral-7b-instruct-v0.2            |
+| `kimi-k2.5`                       | @cf/moonshotai/kimi-k2.5                        |
+| `kimi-k2.6`                       | @cf/moonshotai/kimi-k2.6                        |
+| ...                               | 更多模型请查看代码中的 `TEXT_GENERATION_MODELS` |
 
 > 完整模型列表请参考 [Cloudflare Workers AI Models](https://developers.cloudflare.com/workers-ai/models/)
 
@@ -175,8 +182,8 @@ console.log(completion.choices[0].message.content);
 
 ```javascript
 const TEXT_GENERATION_MODELS = {
-  // ... 现有模型
-  "你的短名称": "@cf/provider/model-name",
+	// ... 现有模型
+	你的短名称: '@cf/provider/model-name',
 };
 ```
 
@@ -185,7 +192,7 @@ const TEXT_GENERATION_MODELS = {
 修改 `DEFAULT_MODEL` 常量：
 
 ```javascript
-const DEFAULT_MODEL = "llama-3.1-8b-instruct"; // 改为你想要的默认模型短名称
+const DEFAULT_MODEL = 'llama-3.1-8b-instruct'; // 改为你想要的默认模型短名称
 ```
 
 ### 多账号配置
@@ -194,8 +201,8 @@ const DEFAULT_MODEL = "llama-3.1-8b-instruct"; // 改为你想要的默认模型
 
 ```javascript
 let cf_account_array = [
-  { account_id: "账号1_ID", token: "账号1_Token" },
-  { account_id: "账号2_ID", token: "账号2_Token" },
+	{ account_id: '账号1_ID', token: '账号1_Token' },
+	{ account_id: '账号2_ID', token: '账号2_Token' },
 ];
 ```
 
